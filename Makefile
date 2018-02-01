@@ -1,4 +1,4 @@
-REGISTRY?=directxman12
+REGISTRY?=lumeche
 IMAGE?=k8s-prometheus-adapter
 TEMP_DIR:=$(shell mktemp -d)
 ARCH?=amd64
