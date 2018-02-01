@@ -13,10 +13,12 @@ addons:
     packages:
     - glide
 
+services:
+        - docker
 install:
 - make -B vendor
 
-script: make push
+script: make all build docker-build push-% push
 
 cache:
   directories:
