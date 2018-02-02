@@ -80,7 +80,7 @@ func NewPrometheusProvider(mapper apimeta.RESTMapper, kubeClient dynamic.ClientP
 	}
 }
 
-func (p *prometheusProvider) metricFor(value pmodel.SampleValue, groupResource schema.GroupResource, namespace string, name string, metricName string) (*custom_metrics.MetricValue, error) {
+func (p *prometheus	Provider) metricFor(value pmodel.SampleValue, groupResource schema.GroupResource, namespace string, name string, metricName string) (*custom_metrics.MetricValue, error) {
 	kind, err := p.mapper.KindFor(groupResource.WithVersion(""))
 	if err != nil {
 		return nil, err
@@ -90,7 +90,7 @@ func (p *prometheusProvider) metricFor(value pmodel.SampleValue, groupResource s
 		DescribedObject: api.ObjectReference{
 			APIVersion: groupResource.Group + "/" + runtime.APIVersionInternal,
 			Kind:       kind.Kind,
-			Name:       "toto",
+			Name:       name,
 			Namespace:  namespace,
 		},
 		MetricName: metricName,
@@ -172,6 +172,7 @@ func (p *prometheusProvider) buildQuery(info provider.MetricInfo, namespace stri
 }
 
 func (p *prometheusProvider) getSingle(info provider.MetricInfo, namespace, name string) (*custom_metrics.MetricValue, error) {
+	glog.V(10).Infof("Custom metric required  for  %s on namespace %s",name,namespace)
 	queryResults, err := p.buildQuery(info, namespace, name)
 	if err != nil {
 		return nil, err
@@ -201,6 +202,7 @@ func (p *prometheusProvider) getSingle(info provider.MetricInfo, namespace, name
 
 func (p *prometheusProvider) getMultiple(info provider.MetricInfo, namespace string, selector labels.Selector) (*custom_metrics.MetricValueList, error) {
 	// construct a client to list the names of objects matching the label selector
+	glog.V(10).Infof("Custom metricS required  for namespace %s",namespace)
 	client, err := p.kubeClient.ClientForGroupVersionResource(info.GroupResource.WithVersion(""))
 	if err != nil {
 		glog.Errorf("unable to construct dynamic client to list matching resource names: %v", err)
