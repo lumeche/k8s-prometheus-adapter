@@ -1,4 +1,4 @@
-REGISTRY?=directxman12
+REGISTRY?=lumeche
 IMAGE?=k8s-prometheus-adapter
 TEMP_DIR:=$(shell mktemp -d)
 ARCH?=amd64
@@ -7,7 +7,7 @@ ML_PLATFORMS=linux/amd64,linux/arm,linux/arm64,linux/ppc64le,linux/s390x
 OUT_DIR?=./_output
 VENDOR_DOCKERIZED=0
 
-VERSION?=latest
+VERSION?=test
 
 ifeq ($(ARCH),amd64)
 	BASEIMAGE?=busybox
@@ -39,14 +39,15 @@ docker-build: vendor
 		CGO_ENABLED=0 go build -a -tags netgo -o /build/adapter github.com/directxman12/k8s-prometheus-adapter/cmd/adapter"
 
 	docker build -t $(REGISTRY)/$(IMAGE)-$(ARCH):$(VERSION) $(TEMP_DIR)
-	sudo rm -r $(TEMP_DIR)
+	rm -rf $(TEMP_DIR)
 
 push-%:
 	$(MAKE) ARCH=$* docker-build
+	docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}
 	docker push $(REGISTRY)/$(IMAGE)-$*:$(VERSION)
 
 push: ./manifest-tool $(addprefix push-,$(ALL_ARCH))
-	./manifest-tool push from-args --platforms $(ML_PLATFORMS) --template $(REGISTRY)/$(IMAGE)-ARCH:$(VERSION) --target $(REGISTRY)/$(IMAGE):$(VERSION)
+	./manifest-tool push from-args --platforms $(ML_PLATFORMS) --template $(REGISTRY)/$(IMAGE)-ARCH:$(VERSION) --target $(REGISTRY)/$(IMAGE):$(VERSION) 
 
 ./manifest-tool:
 	curl -sSL https://github.com/estesp/manifest-tool/releases/download/v0.5.0/manifest-tool-linux-amd64 > manifest-tool

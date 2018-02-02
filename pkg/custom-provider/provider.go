@@ -84,7 +84,7 @@ func (p *prometheusProvider) metricFor(value pmodel.SampleValue, groupResource s
 	if err != nil {
 		return nil, err
 	}
-
+	glog.V(10).Infof("Metric provided  as kind:[%s] name[%s] metricname[%s]", kind, name, metricName)
 	return &custom_metrics.MetricValue{
 		DescribedObject: api.ObjectReference{
 			APIVersion: groupResource.Group + "/" + runtime.APIVersionInternal,
