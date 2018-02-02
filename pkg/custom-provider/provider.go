@@ -19,8 +19,9 @@ package provider
 import (
 	"context"
 	"fmt"
-	"github.com/golang/glog"
 	"time"
+
+	"github.com/golang/glog"
 
 	"github.com/kubernetes-incubator/custom-metrics-apiserver/pkg/provider"
 	pmodel "github.com/prometheus/common/model"
@@ -89,7 +90,7 @@ func (p *prometheusProvider) metricFor(value pmodel.SampleValue, groupResource s
 		DescribedObject: api.ObjectReference{
 			APIVersion: groupResource.Group + "/" + runtime.APIVersionInternal,
 			Kind:       kind.Kind,
-			Name:       name,
+			Name:       "toto",
 			Namespace:  namespace,
 		},
 		MetricName: metricName,
