@@ -18,7 +18,7 @@ services:
 install:
 - make -B vendor
 
-script: make all build docker-build push-% push
+script: make all build docker-build push
 
 cache:
   directories:
