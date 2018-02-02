@@ -43,7 +43,7 @@ docker-build: vendor
 
 push-%:
 	$(MAKE) ARCH=$* docker-build
-	docker login $(REGISTRY) --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}
+	docker login --username ${DOCKER_USERNAME} --password ${DOCKER_PASSWORD}
 	docker push $(REGISTRY)/$(IMAGE)-$*:$(VERSION)
 
 push: ./manifest-tool $(addprefix push-,$(ALL_ARCH))
